@@ -1,19 +1,16 @@
 package com.demo.weather
 
-import com.demo.weather.di.DaggerAppComponent
-import dagger.android.DaggerApplication
+import android.app.Application
+import android.util.Log
+import androidx.multidex.MultiDexApplication
+import dagger.hilt.android.HiltAndroidApp
 
-@Suppress("unused")
-open class DemoApplication : DaggerApplication() {
-    private val appComponent = DaggerAppComponent.builder()
-        .application(this)
-        .build()
+@HiltAndroidApp
+class DemoApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent.inject(this)
+        Log.d(">>>", "Dagger inject object initializing !!!")
     }
-
-    override fun applicationInjector() = appComponent
 
 }

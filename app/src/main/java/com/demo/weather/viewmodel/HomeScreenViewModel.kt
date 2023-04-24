@@ -3,16 +3,17 @@ package com.demo.weather.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.demo.weather.data.AppRepository
 import com.demo.weather.model.City
-import com.demo.weather.repository.QueryCityRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class HomeScreenViewModel @Inject
-constructor(
-    private val queryRepo: QueryCityRepo
+
+class HomeScreenViewModel @Inject constructor(
+    private val repo: AppRepository
 ): BaseViewModel() {
     private val TAG = HomeScreenViewModel::class.java.simpleName
     private val _cities: MutableLiveData<List<City>> = MutableLiveData<List<City>>().apply { value = emptyList() }
@@ -24,7 +25,7 @@ constructor(
 
     fun queryCityList(query: String) {
         runOnIO {
-            queryRepo.queryCities(query)
+            repo.queryCities(query)
                 .flowOn(Dispatchers.IO)
                 .collect { r ->
                     onOperationSucceed(r)

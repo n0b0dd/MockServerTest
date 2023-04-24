@@ -3,9 +3,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-
-apply plugin: 'jacoco'
-apply from: '../jacoco.gradle'
+apply plugin: 'dagger.hilt.android.plugin'
+//apply plugin: 'jacoco'
+//apply from: '../jacoco.gradle'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -31,8 +31,28 @@ android {
         }
     }
 
+    flavorDimensions "default"
+
+    // If you need to add more flavors, consider using flavor dimensions.
+    productFlavors {
+        dev {
+            dimension "default"
+        }
+        mock {
+            dimension "default"
+            applicationIdSuffix = ".mock"
+        }
+        prod {
+            dimension "default"
+        }
+    }
+
     dataBinding {
         enabled = true
+    }
+
+    hilt {
+        enableTransformForLocalTests = true
     }
 
     compileOptions {
@@ -63,21 +83,25 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.android.support:multidex:1.0.3'
 
+    implementation "androidx.activity:activity-ktx:$activity"
+
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
     // dependency injection
-    implementation "com.google.dagger:dagger:$dagger_version"
-    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+//    implementation "com.google.dagger:dagger:$dagger_version"
+//    implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     implementation 'androidx.preference:preference:1.1.1'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // Jackson
-    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
+//    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+//    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+//    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
@@ -88,11 +112,11 @@ dependencies {
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.okhttp3:okhttp:4.9.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     implementation "com.squareup.okhttp3:okhttp-tls:4.9.0"
 
-    debugImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
+    debugImplementation 'com.squareup.okhttp3:mockwebserver:4.9.1'
 
     testImplementation 'junit:junit:4.12'
     testImplementation "androidx.test:runner:$androidx_test_version"
@@ -117,5 +141,10 @@ dependencies {
         exclude group: 'androidx.localbroadcastmanager', module: 'localbroadcastmanager'
     }
     androidTestImplementation 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0'
+
+    // Hilt for ui testing
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.38.1'
+    testImplementation "com.google.truth:truth:$truthVersion"
 
 }

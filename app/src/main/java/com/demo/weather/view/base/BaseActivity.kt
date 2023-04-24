@@ -6,28 +6,22 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModelProvider
-import com.demo.weather.viewmodel.BaseViewModel
-import dagger.android.AndroidInjection
-import javax.inject.Inject
 
-abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity() {
-    protected abstract val viewModel: BaseViewModel
+abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
+//    public val viewModel: BaseViewModel? = null
     protected lateinit var context: Context
-    protected lateinit var binding: B
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    protected lateinit var binding: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+//        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         context = this
         binding = DataBindingUtil.setContentView(this, getContentView())
         binding.lifecycleOwner = this
+        binding.executePendingBindings()
 
-        setupBinding()
-        setupViewModel()
+//        setupBinding()
+//        setupViewModel()
     }
 
     override fun onDestroy() {

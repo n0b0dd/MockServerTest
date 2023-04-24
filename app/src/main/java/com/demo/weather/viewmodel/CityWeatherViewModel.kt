@@ -4,16 +4,17 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.demo.weather.repository.CityWeatherRepo
+import com.demo.weather.data.AppRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class CityWeatherViewModel  @Inject
-constructor(
-    private val repository: CityWeatherRepo
+@HiltViewModel
+class CityWeatherViewModel @Inject constructor(
+    private val repository: AppRepository
 ): BaseViewModel() {
     private val TAG = CityWeatherViewModel::class.java.simpleName
 

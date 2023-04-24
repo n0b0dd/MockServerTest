@@ -5,39 +5,41 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.demo.weather.BuildConfig
 import com.demo.weather.R
-import com.demo.weather.databinding.ActivityBaseBinding
+import com.demo.weather.databinding.ActivityHomeBinding
 import com.demo.weather.model.City
 import com.demo.weather.util.CITY_ID
-import com.demo.weather.util.CITY_NAME_PREFIX
 import com.demo.weather.view.base.BaseActivity
-import com.demo.weather.view.base.viewModels
 import com.demo.weather.view.widget.DividerItemDecorator
 import com.demo.weather.viewmodel.HomeScreenViewModel
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_main.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_home.*
 
-
-class HomeScreenActivity : BaseActivity<ActivityBaseBinding>() {
+@AndroidEntryPoint
+class HomeScreenActivity : BaseActivity<ActivityHomeBinding>() {
     private val TAG = HomeScreenActivity::class.java.simpleName
-    override val viewModel by viewModels<HomeScreenViewModel> { viewModelFactory }
     private lateinit var adapter: HomeScreenAdapter
+    val viewModel :HomeScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initUI()
+//        binding.viewModel = viewModel
+//        initUI()
+        Log.d(TAG, "onCreate: $viewModel")
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.queryCityList(CITY_NAME_PREFIX)
+//        viewModel.queryCityList(CITY_NAME_PREFIX)
     }
 
-    override fun getContentView() = R.layout.activity_main
+    override fun getContentView() = R.layout.activity_home
 
     override fun setupBinding() { }
 
@@ -66,7 +68,8 @@ class HomeScreenActivity : BaseActivity<ActivityBaseBinding>() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         // Inflate the menu; this adds items to the action bar if it is present.
-        if (BuildConfig.DEBUG) {
+        Toast.makeText(this, "Flavor ${BuildConfig.FLAVOR} ${context.packageName}", Toast.LENGTH_SHORT).show()
+        if (BuildConfig.FLAVOR == "mock") {
             menuInflater.inflate(R.menu.home_menu, menu)
 
             val settingMenu = menu.findItem(R.id.action_setting)

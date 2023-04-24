@@ -22,7 +22,6 @@ internal class FlowCallAdapter<R>(private val responseType: Type) :
 
     override fun responseType() = responseType
 
-    @ExperimentalCoroutinesApi
     override fun adapt(call: Call<R>): Flow<R?> {
         return callbackFlow {
             val started = AtomicBoolean(false)
